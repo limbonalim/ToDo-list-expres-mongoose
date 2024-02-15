@@ -2,22 +2,26 @@ import express, { json } from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
+import usersRouter from './router/users';
+
 const app = express();
 const port = 8000;
 
 app.use(json());
 app.use(cors());
 
+app.use('/users', usersRouter);
+
 const run = async () => {
-  await mongoose.connect('mongodb://localhost/todolist');
+	await mongoose.connect('mongodb://localhost/todolist');
 
-  app.listen(port, () => {
-    console.log(`Server started on ${port} port!`);
-  });
+	app.listen(port, () => {
+		console.log(`Server started on ${port} port!`);
+	});
 
-  process.on('exit', () => {
-    mongoose.disconnect();
-  });
+	process.on('exit', () => {
+		mongoose.disconnect();
+	});
 };
 
 void run();
