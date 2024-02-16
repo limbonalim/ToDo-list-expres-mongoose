@@ -3,6 +3,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 
 import usersRouter from './router/users';
+import tasksRouter from './router/tasks';
 
 const app = express();
 const port = 8000;
@@ -11,6 +12,7 @@ app.use(json());
 app.use(cors());
 
 app.use('/users', usersRouter);
+app.use('/tasks', tasksRouter);
 
 const run = async () => {
 	await mongoose.connect('mongodb://localhost/todolist');

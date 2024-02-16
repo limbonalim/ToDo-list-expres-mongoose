@@ -1,4 +1,5 @@
-import { Model } from 'mongoose';
+import { Model, Schema } from 'mongoose';
+import { Status } from './models/tasksSchema';
 
 export interface IUserFields {
 	username: string;
@@ -12,3 +13,12 @@ export interface IUserMethods {
 }
 
 export type IUserModel = Model<IUserFields, unknown, IUserMethods>;
+
+export interface ITaskFields {
+	user: Schema.Types.ObjectId;
+	title: string;
+	description?: string;
+	status: Status;
+}
+
+export type ITaskModel = Model<IUserFields, unknown, unknown>;
