@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import mongoose from 'mongoose';
+import mongoose, { mongo } from 'mongoose';
 import User from '../models/usersSchema';
 
 const usersRouter = Router();
 
 usersRouter.post('/', async (req, res, next) => {
 	try {
-		if (!req.body.username && !req.body.password) {
+		if (!req.body.username || !req.body.password) {
 			return res
 				.status(400)
 				.send({ error: 'username and password should be in request' });
@@ -23,13 +23,18 @@ usersRouter.post('/', async (req, res, next) => {
 		if (e instanceof mongoose.Error.ValidationError) {
 			return res.status(422).send(e);
 		}
+		if (e instanceof mongo.MongoServerError && e.code === 11000) {
+			return res
+				.status(422)
+				.send({ error: 'User with this username is already have' });
+		}
 		next(e);
 	}
 });
 
 usersRouter.post('/sessions', async (req, res, next) => {
 	try {
-		if (!req.body.username && !req.body.password) {
+		if (!req.body.username || !req.body.password) {
 			return res
 				.status(400)
 				.send({ error: 'username and password should be in request' });
