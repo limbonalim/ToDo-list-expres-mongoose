@@ -8,7 +8,8 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "lint": "eslint \"**/*.ts\"",
-    "typecheck": "tsc --noemit"
+    "typecheck": "tsc --noemit",
+    "seed": "ts-node fixtures.ts"
   },
   "keywords": [],
   "author": "",

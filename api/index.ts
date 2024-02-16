@@ -2,6 +2,7 @@ import express, { json } from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
+import config from './config';
 import usersRouter from './router/users';
 import tasksRouter from './router/tasks';
 
@@ -15,7 +16,7 @@ app.use('/users', usersRouter);
 app.use('/tasks', tasksRouter);
 
 const run = async () => {
-	await mongoose.connect('mongodb://localhost/todolist');
+	await mongoose.connect(config.mongoose);
 
 	app.listen(port, () => {
 		console.log(`Server started on ${port} port!`);
