@@ -1,27 +1,25 @@
 import { Grid } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import Layout from './components/UI/Layout/Layout.tsx';
 import { useAppDispatch, useAppSelector } from './app/hooks.ts';
-import { selectTasks } from './store/taskSlice.ts';
+import { selectTasks, selectUser } from './store/taskSlice.ts';
 import { getTasks } from './store/taskThunks.ts';
 import Task from './components/Task/Task.tsx';
 
 
 const App = () => {
-  const [token, setToken] = useState<string| null>(null);
+  const token = localStorage.getItem('token')
   const dispatch = useAppDispatch();
   const tasks = useAppSelector(selectTasks);
+  const user = useAppSelector(selectUser);
 
   const renderTask = useCallback(async () => {
     if (token) {
       await dispatch(getTasks(token));
     }
-  }, [token]);
+  }, [user]);
 
-  useEffect(() => {
-    setToken(localStorage.getItem('token'));
-  });
   useEffect(() => {
     if (token) {
       dispatch(getTasks(token));

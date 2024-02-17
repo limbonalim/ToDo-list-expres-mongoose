@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../app/store.ts';
 import { deleteTask, getTasks, logIn, signIn } from './taskThunks.ts';
 import type { ITask } from '../types';
+import { IUser } from '../types';
 
 
 interface ITasksSlice {
@@ -10,13 +11,15 @@ interface ITasksSlice {
 	isShowTaskModal: boolean;
 	tasks: ITask[];
 	editTask: ITask | null;
+	user: IUser | null
 }
 
 const initialState: ITasksSlice = {
 	isShowModal: false,
 	isShowTaskModal: false,
 	tasks: [],
-	editTask: null
+	editTask: null,
+	user: null
 }
 
 const tasksSlice = createSlice({
@@ -44,6 +47,7 @@ const tasksSlice = createSlice({
 
 		}).addCase(signIn.fulfilled, (state, {payload: user}) => {
 			localStorage.setItem('token', user.token);
+			state.user = user;
 		}).addCase(signIn.rejected, (state, {error}) => {
 			console.log(error);
 		});
@@ -52,16 +56,17 @@ const tasksSlice = createSlice({
 
 		}).addCase(logIn.fulfilled, (state, {payload: user}) => {
 			localStorage.setItem('token', user.token);
+			state.user = user;
 		}).addCase(logIn.rejected, (state, {error}) => {
 			console.log(error);
 		});
 
 		builder.addCase(getTasks.pending, (state) => {
-
+			state.tasks = [];
 		}).addCase(getTasks.fulfilled, (state, {payload: userTasks}) => {
 			state.tasks = userTasks;
 		}).addCase(getTasks.rejected, (state, {error}) => {
-			console.log(error);
+
 		});
 
 		builder.addCase(deleteTask.pending, (state) => {
@@ -78,6 +83,7 @@ export const selectIsShowModal = (state: RootState) => state.task.isShowModal;
 export const selectIsShowTaskModal = (state: RootState) => state.task.isShowTaskModal;
 export const selectTasks = (state: RootState) => state.task.tasks;
 export const selectEditTask = (state: RootState) => state.task.editTask;
+export const selectUser = (state: RootState) => state.task.user;
 
 export const {
 	openModal,
