@@ -10,7 +10,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { FormControlLabel, IconButton, Switch } from '@mui/material';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
-import { closeModal, openModal, selectIsShowModal } from '../../store/taskSlice.ts';
+import { closeModal, openModal, selectIsAuth, selectIsShowModal } from '../../store/taskSlice.ts';
 import { logIn, signIn } from '../../store/taskThunks.ts';
 import type { IUserForm } from '../../types';
 
@@ -23,6 +23,7 @@ const AuthForm = () => {
 	});
 	const [title, setTitle] = useState<string>('Login');
 	const [isLogin, setIsLogin] = useState<boolean>(true);
+	const isLoading = useAppSelector(selectIsAuth);
 
 	const handleClickOpen = () => {
 		dispatch(openModal());
@@ -106,7 +107,7 @@ const AuthForm = () => {
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose}>Cancel</Button>
-					<Button type="submit">{title}</Button>
+					<Button type="submit" disabled={isLoading}>{title}</Button>
 				</DialogActions>
 			</Dialog>
 		</React.Fragment>

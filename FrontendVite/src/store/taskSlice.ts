@@ -16,6 +16,7 @@ interface ITasksSlice {
 	isError: boolean;
 	isLoading: boolean;
 	isCreateOrEdit: boolean;
+	isAuth: boolean
 }
 
 const initialState: ITasksSlice = {
@@ -27,7 +28,8 @@ const initialState: ITasksSlice = {
 	error: '',
 	isError: false,
 	isLoading: false,
-	isCreateOrEdit: false
+	isCreateOrEdit: false,
+	isAuth: false
 }
 
 const tasksSlice = createSlice({
@@ -58,21 +60,34 @@ const tasksSlice = createSlice({
 	},
 	extraReducers: builder => {
 		builder.addCase(signIn.pending, (state) => {
-
+			state.isAuth = true;
+			state.isError = false;
+			state.error = '';
+			state.user = null;
 		}).addCase(signIn.fulfilled, (state, {payload: user}) => {
 			localStorage.setItem('token', user.token);
 			state.user = user;
 		}).addCase(signIn.rejected, (state, {error}) => {
-			console.log(error);
+			state.isError = true;
+			console.log(error)
+			state.error = error.message? error.message : '';
 		});
 
 		builder.addCase(logIn.pending, (state) => {
-
+			state.isAuth = true;
+			state.isError = false;
+			state.error = '';
+			state.user = null;
 		}).addCase(logIn.fulfilled, (state, {payload: user}) => {
 			localStorage.setItem('token', user.token);
 			state.user = user;
 		}).addCase(logIn.rejected, (state, {error}) => {
-			console.log(error);
+			state.isError = true;
+			if (error.message === 'Request failed with status code 422') {
+				state.error = 'User or password incorrect';
+			} else {
+				state.error = error.message? error.message : '';
+			}
 		});
 
 		builder.addCase(getTasks.pending, (state) => {
@@ -88,7 +103,7 @@ const tasksSlice = createSlice({
 			state.isLoading = false;
 			state.isError = true;
 			if (error.message === 'Request failed with status code 404') {
-				state.error = '404! Not Found'
+				state.error = '404! Not Found';
 			} else {
 				state.error = error.message? error.message : '';
 			}
@@ -138,6 +153,7 @@ export const selectisLoading = (state: RootState) => state.task.isLoading;
 export const selectIsError = (state: RootState) => state.task.isError;
 export const selectError = (state: RootState) => state.task.error;
 export const selectIsCreateOrEdit = (state: RootState) => state.task.isCreateOrEdit;
+export const selectIsAuth = (state: RootState) => state.task.isAuth;
 
 export const {
 	openModal,

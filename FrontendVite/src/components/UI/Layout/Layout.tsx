@@ -19,7 +19,7 @@ const Layout:React.FC<PropsWithChildren> = ({children}) => {
       </header>
       <main>
         <Container>
-          {isError? <Alert severity="error">{error}</Alert> : ''}
+          {isError? <Alert sx={{mb: 1}} severity="error">{error}</Alert> : ''}
           {isLoading? <Loader/> : children}
         </Container>
       </main>
