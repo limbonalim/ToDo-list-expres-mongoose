@@ -41,6 +41,7 @@ const App = () => {
               title={item.title}
               description={item.description}
               status={item.status}
+              isDeleting={item.isDeleting}
             />
           ))}
         </Grid>

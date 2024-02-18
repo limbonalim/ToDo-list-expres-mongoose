@@ -3,11 +3,11 @@ import { Button, Grid, Typography } from '@mui/material';
 
 import { statusProperty } from '../../constants';
 import { useAppDispatch } from '../../app/hooks.ts';
-import { openTaskModal, setEditTask } from '../../store/taskSlice.ts';
+import { openTaskModal, setDeletingTask, setEditTask } from '../../store/taskSlice.ts';
 import { deleteTask, getTasks } from '../../store/taskThunks.ts';
 import type { ITask } from '../../types';
 
-const memoTask: React.FC<ITask> = memo(function Task({_id, title, description, status}) {
+const memoTask: React.FC<ITask> = memo(function Task({_id, title, description, status, isDeleting}) {
 	const dispatch = useAppDispatch();
 	const token = localStorage.getItem('token');
 	const statusIndex = statusProperty.findIndex((item) => item.value === status);
@@ -17,12 +17,14 @@ const memoTask: React.FC<ITask> = memo(function Task({_id, title, description, s
 			_id,
 			title,
 			description,
-			status
+			status,
+			isDeleting
 		}));
 		dispatch(openTaskModal());
 	};
 	const handleDelete = async () => {
 		if (token) {
+			dispatch(setDeletingTask(_id));
 			await dispatch(deleteTask({
 				id: _id,
 				token
@@ -46,7 +48,7 @@ const memoTask: React.FC<ITask> = memo(function Task({_id, title, description, s
 			</Grid>
 			<Grid item>
 				<Button onClick={handleEdit} variant="outlined" color="success">Change</Button>
-				<Button onClick={handleDelete} variant="outlined" color="error">Delete</Button>
+				<Button onClick={handleDelete} variant="outlined" color="error" disabled={isDeleting}>Delete</Button>
 			</Grid>
 		</Grid>
 	);

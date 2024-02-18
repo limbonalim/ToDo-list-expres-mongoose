@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 import axiosApi from '../axiosApi.ts';
-import type { ITask, IUser, IQueryTask, IQueryPutTask, IQueryTaskDelete, IUserForm } from '../types';
+import type { ITask, IUser, IQueryTask, IQueryPutTask, IQueryTaskDelete, IUserForm, IApiTask } from '../types';
 
 export const signIn = createAsyncThunk<IUser, IUserForm>(
 	'tasks/signIn',
@@ -23,9 +23,13 @@ export const logIn = createAsyncThunk<IUser, IUserForm>(
 export const getTasks = createAsyncThunk<ITask[], string>(
 	'tasks/getTasks',
 	async (token) => {
-		const response = await axiosApi.get<ITask[]>('/tasks', {headers : {'Authorization': `Barer ${token}`}});
-
-		return response.data;
+		const response = await axiosApi.get<IApiTask[]>('/tasks', {headers : {'Authorization': `Barer ${token}`}});
+		const data = response.data;
+		const result: ITask[] = data.map((item) => ({
+			...item,
+			isDeleting: false
+		}));
+		return result;
 	}
 );
 

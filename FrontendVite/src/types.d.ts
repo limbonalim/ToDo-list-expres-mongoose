@@ -1,11 +1,15 @@
 import { Status } from './components/Task/Task.tsx';
 import { ITaskForm } from './components/TaskForm/TaskForm.tsx';
 
-export interface ITask {
+export interface IApiTask {
 	_id: string;
 	title: string;
 	description?: string;
 	status: Status;
+}
+
+export interface ITask extends IApiTask {
+	isDeleting: boolean
 }
 
 export interface IUser {

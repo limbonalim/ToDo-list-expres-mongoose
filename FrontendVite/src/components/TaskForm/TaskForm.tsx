@@ -18,7 +18,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import {
 	closeTaskModal,
-	openTaskModal, selectEditTask,
+	openTaskModal, selectEditTask, selectIsCreateOrEdit,
 	selectIsShowTaskModal,
 } from '../../store/taskSlice.ts';
 import { getTasks, postTask, putTask } from '../../store/taskThunks.ts';
@@ -31,6 +31,7 @@ import type { IQueryPutTask, IQueryTask, ITaskForm } from '../../types';
 const TaskForm = () => {
 	const editTask = useAppSelector(selectEditTask);
 	const open = useAppSelector(selectIsShowTaskModal);
+	const isPostedOrEdit = useAppSelector(selectIsCreateOrEdit);
 	const dispatch = useAppDispatch();
 	const [task, setTask] = useState<ITaskForm>({
 		title: '',
@@ -164,7 +165,7 @@ const TaskForm = () => {
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={handleClose}>Cancel</Button>
-					<Button type="submit">Add</Button>
+					<Button type="submit" disabled={isPostedOrEdit}>Add</Button>
 				</DialogActions>
 			</Dialog>
 		</React.Fragment>
